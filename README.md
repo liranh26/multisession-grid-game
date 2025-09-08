@@ -1,4 +1,4 @@
-# Multisession Grid Game (Template)
+# Multisession Grid Game
 
 A minimal full‑stack template for the home assignment:
 - **Client:** React + TypeScript + Vite, renders a 3×6 SVG grid.

@@ -20,6 +20,16 @@ export interface ClickPayload {
 }
 
 export const SHAPES: Shape[] = ["triangle","square","diamond","circle"];
-export const COLORS: Color[] = ["red","green","blue","yellow"]; // ← this one
+export const COLORS: Color[] = ["red","green","blue","yellow"];
 export const ROWS = 3;
 export const COLS = 6;
+
+export type LeaderboardEntry = {
+  nickname: string;     // 1..24 chars (server will enforce)
+  score: number;        // integer >= 0
+  playedAt: string;     // ISO timestamp
+};
+
+export type LeaderboardTopResponse = {
+  top: LeaderboardEntry[]; // already sorted DESC by score, then newest first
+};
