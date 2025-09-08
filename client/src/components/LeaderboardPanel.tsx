@@ -1,4 +1,18 @@
 // src/components/LeaderboardPanel.tsx
+/**
+ * Leaderboard modal panel.
+ *
+ * Props:
+ * - open: whether the modal is visible
+ * - loading: loading indicator while fetching
+ * - error: error message (if any)
+ * - top: array of leaderboard entries to render
+ * - onRefresh: handler to refetch the leaderboard
+ * - onClose: handler to close the modal
+ *
+ * Accessibility:
+ * - Uses role="dialog" and aria-modal for screen readers.
+ */
 import React from "react";
 import type { LeaderboardEntry } from "@shared/types";
 
@@ -17,13 +31,15 @@ export default function LeaderboardPanel({
     onRefresh: () => void;
     onClose: () => void;
 }) {
-    if (!open) return null;
+    if (!open) return null; // don't render anything unless open
+
     return (
         <div className="modal-backdrop" role="dialog" aria-modal="true">
             <div className="modal">
                 <div className="modal-header">
                     <h2 style={{ margin: 0 }}>Leaderboard (Top 10)</h2>
-                    <button className="btn" onClick={onClose}>✕</button>
+                    {/* Provide a simple close affordance */}
+                    <button className="btn" onClick={onClose} aria-label="Close leaderboard">✕</button>
                 </div>
 
                 <div className="modal-content">
