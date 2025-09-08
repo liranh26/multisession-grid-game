@@ -18,6 +18,18 @@
       .legend { display:flex; gap:12px; flex-wrap:wrap; margin-top:10px; }
       .legend span { padding:4px 8px; border-radius:6px; border:1px solid #334155; background:#0b1220;}
       .footer { opacity:0.8; font-size:12px; margin-top:20px; }
+      .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; padding: 16px; z-index: 50; }
+      .modal { background:#0b1220; border:1px solid #1f2a44; border-radius:14px; width: 640px; max-width: 100%; }
+      .modal-header { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-bottom:1px solid #1f2a44; }
+      .modal-content { padding:14px; }
+      .modal-actions { padding:12px 14px; display:flex; gap:8px; justify-content:flex-end; border-top:1px solid #1f2a44; }
+      .lb-list { list-style:none; padding:0; margin:0; display:grid; gap:8px; }
+      .lb-list li { display:grid; grid-template-columns: auto auto 1fr auto auto auto; gap:8px; background:#0f172a; border:1px solid #1f2a44; padding:8px 10px; border-radius:10px; align-items:center; }
+      .lb-list .rank { font-weight:700; opacity:0.8; }
+      .lb-list .nick { font-weight:600; }
+      .lb-list .score { justify-self:start; }
+      .lb-list .date { opacity:0.8; font-size:12px; justify-self:end; }
+      .lb-list .sep { opacity:0.6; padding: 0 6px; }
     </style>
   </head>
   <body>

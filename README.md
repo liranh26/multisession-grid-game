@@ -1,55 +1,118 @@
 # Multisession Grid Game
 
-A minimal full‑stack template for the home assignment:
-- **Client:** React + TypeScript + Vite, renders a 3×6 SVG grid.
-- **Server:** Node + TypeScript + Express + Socket.IO, holds the single shared game state in memory.
-- **Realtime:** Socket.IO syncs the game state across all connected clients.
-- **Rules implemented:** 
-  - Initial valid board (no adjacent same shape or color).
-  - Click changes **both** shape and color to a valid random pair.
-  - +1 score per valid click. Turn advances; all cooldowns decrement by 1.
-  - A clicked cell goes on **3‑turn cooldown**.
-  - If no valid pair exists for a clicked cell → **game over**.
-- **Bonus 2:** SVG shapes are used.
+A minimal full-stack project for the assignment.
 
-> This is intentionally lightweight (no tests/linters), so you can deliver quickly.
+- **Client:** React + TypeScript + Vite, renders a 3×6 SVG grid.
+- **Server:** Node + TypeScript + Express + Socket.IO, holds the shared game state in memory.
+- **Realtime:** Socket.IO syncs the game state across all connected clients.
+
+## Features
+
+### Core Game Rules
+- Initial valid board (no adjacent same shape or color).
+- Clicking a cell changes **both** its shape and color to a valid random pair.
+- +1 score per valid click. Turn increments, and all cooldowns decrement by 1.
+- Clicked cell enters a **3-turn cooldown**.
+- If no valid pair exists for a clicked cell → **game over**.
+- **Reset** button regenerates a fresh valid board (dev/debug convenience).
+
+### Bonus 1 — Leaderboard
+- After **game over**, the client prompts for a nickname and submits the score.
+- The **Leaderboard** button shows the **top 10 scores** in a modal.
+- Scores are stored server-side in `data/leaderboard.json` (top 100 persisted).
+- Leaderboard is not synced in real time (only fetched on demand).
+
+### Bonus 2 — SVG shapes
+- Cells render as colored SVG: circle, square, diamond, triangle.
+
+---
 
 ## Quick Start
 
-### 1) Install
+### 1) Server
 ```bash
-# in one terminal
 cd server
-npm i
+npm install
 npm run dev
-# server listens on http://localhost:3001
-
-# in another terminal
-cd client
-npm i
-npm run dev
-# open http://localhost:5173
+# Server runs at http://localhost:3001
 ```
 
-> If you run the client on another host/port, set `VITE_SERVER_URL` in `client/.env`:
-> ```env
-> VITE_SERVER_URL=http://localhost:3001
-> ```
+**Scripts (server/package.json)**:
+- `dev`: run with `tsx watch src/index.ts`
+- `build`: `tsc -p tsconfig.json`
+- `start`: run compiled `dist/index.js`
 
-### 2) How it works
-- The **server** keeps `{ board, score, turn, gameOver }`. On client connect or any update, it emits `state` to everyone.
-- **Clicks** are sent as `{row, col}`. The server validates:
-  - If the cell is on cooldown or game is over → ignored.
-  - Compute all valid `(shape,color)` pairs that differ from all 4‑way neighbors and **both** differ from the current pair.
-  - If none → set `gameOver=true`. Otherwise pick a random pair, set `cooldown=3`, increment `score`, advance `turn`, decrement all cooldowns by 1, broadcast state.
-- **Reset**: A convenience action to regenerate a valid board during development.
+**Leaderboard Endpoints**
+- `GET /leaderboard/top?limit=10`  
+  → `{ top: Array<{ nickname, score, playedAt }> }`
+- `POST /leaderboard/submit` with JSON `{ nickname, score }`  
+  → stored entry returned
 
-### 3) Notes & Next Steps
-- This template runs with a **single game instance** in memory.
-- For the **leaderboard (bonus)**, store `{nickname, score, finishedAt}` in a simple JSON/SQLite/Redis file/db and add routes & UI.
-- For **horizontal scaling**, put Socket.IO behind a compatible adapter (e.g., Redis adapter) and move game state to Redis/Postgres.
+Config:
+- TypeScript rootDir: `src`, outDir: `dist`
 
-## Tech
-- React 18, Vite 5, TypeScript 5
-- Express 4, Socket.IO 4
-- No tests/linters per assignment constraints
+---
+
+### 2) Client
+```bash
+cd client
+npm install
+npm run dev
+# Open http://localhost:5173
+```
+
+**Scripts (client/package.json)**:
+- `dev`: run Vite dev server
+- `build`: compile & bundle
+- `preview`: preview production build
+
+If your server runs elsewhere, configure:
+```env
+# client/.env
+VITE_SERVER_URL=http://localhost:3001
+```
+
+**TypeScript config:**
+- Uses path alias `@shared/*` → `../shared/*`
+
+---
+
+## How It Works
+
+1. **Server State**
+  - Holds `{ board, score, turn, gameOver }`.
+  - On connection or update, broadcasts `state` to all clients.
+
+2. **Clicks**
+  - Client emits `{ row, col }`.
+  - Server ignores clicks if on cooldown or `gameOver`.
+  - Valid `(shape,color)` pairs = differ from neighbors **and** from current.
+  - If no valid pair → `gameOver = true`.  
+    Otherwise: choose random valid pair, set cooldown=3, increment score, advance turn, decrement all cooldowns, broadcast.
+
+3. **Leaderboard**
+  - When `gameOver=true`, client prompts for nickname → posts to `/leaderboard/submit`.
+  - Leaderboard button fetches `/leaderboard/top` and shows modal with top 10.
+
+---
+
+## Tech Stack
+
+**Client**
+- React 18
+- Vite 5
+- TypeScript 5
+- socket.io-client 4
+
+**Server**
+- Express 4
+- Socket.IO 4
+- TypeScript 5
+- tsx for dev
+
+---
+
+## Notes & Next Steps
+- Runs with a **single game instance** in memory.
+- For multiple server nodes: move state to Redis/Postgres and use Socket.IO Redis adapter.
+- Leaderboard persistence uses a JSON file for simplicity. Replace with SQLite/Redis for concurrency.

@@ -1,4 +1,20 @@
-// src/game/state.ts
+/**
+ * Game State Management
+ * ---------------------
+ * Purpose: In-memory model of the game (players, turns, score, cooldowns, etc.).
+ * Encapsulates game rules (valid moves, turn advancing, collision checks...), and
+ * exposes pure functions used by socket handlers.
+ *
+ * Persistence:
+ * - This module typically keeps transient state in-memory. For durability,
+ *   persist snapshots externally (not handled here).
+ *
+ * Thread-safety:
+ * - Node's event loop is single-threaded; still, avoid long synchronous work.
+ *
+ * Last documented: 2025-09-08 09:37:12
+ */
+
 import type { GameState } from "../types.ts";
 import { ROWS, COLS } from "../types.ts";
 

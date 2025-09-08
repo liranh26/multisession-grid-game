@@ -1,5 +1,5 @@
 // src/App.tsx
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import type { GameState, ClickPayload, LeaderboardEntry } from "@shared/types";
 import Board from "./components/Board";
@@ -18,7 +18,7 @@ export default function App() {
   const [lbLoading, setLbLoading] = useState(false);
   const [lbError, setLbError] = useState<string | null>(null);
   const [lbTop, setLbTop] = useState<LeaderboardEntry[]>([]);
-  const submittedRef = useRef(false); // prevent double submit on re-renders
+  const submittedRef = useRef(false); // prevent double submit
 
   useEffect(() => {
     const s = io(SERVER_URL, { transports: ["websocket"] });
@@ -43,16 +43,18 @@ export default function App() {
     if (state.gameOver && !submittedRef.current) {
       submittedRef.current = true;
       const defaultNick = localStorage.getItem("last_nick") || "";
-      const nickname = window.prompt("Game over! Enter your nickname to submit your score:", defaultNick)?.trim();
+      const nickname = window.prompt(
+          "Game over! Enter your nickname to submit your score:",
+          defaultNick
+      )?.trim();
       if (nickname) {
         localStorage.setItem("last_nick", nickname);
         (async () => {
           try {
             await submitScore({ nickname, score: state.score });
-            // optional: open the leaderboard right away
             openLeaderboard();
           } catch (e: any) {
-            alert(e?.message || "Failed to submit score");
+            alert(e?.message || "Failed to submit score - already submitted ot something else went wrong.");
           }
         })();
       }
@@ -83,9 +85,7 @@ export default function App() {
           {state?.gameOver && <div className="panel" style={{color:"#f87171"}}><strong>Game Over</strong></div>}
         </div>
 
-        {state && (
-            <Board state={state} onCellClick={onCellClick} />
-        )}
+        {state && <Board state={state} onCellClick={onCellClick} />}
 
         <div className="footer">
           Shared, real-time board. Click a cell to change both shape and color. New pair must differ from adjacent cells.

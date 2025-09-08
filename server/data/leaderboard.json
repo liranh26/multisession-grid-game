@@ -1,5 +1,10 @@
 [
   {
+    "nickname": "testing",
+    "score": 25,
+    "playedAt": "2025-09-08T09:36:11.634Z"
+  },
+  {
     "nickname": "dor",
     "score": 17,
     "playedAt": "2025-09-08T08:58:40.736Z"
@@ -45,14 +50,44 @@
     "playedAt": "2025-09-08T08:58:48.461Z"
   },
   {
+    "nickname": "liran",
+    "score": 4,
+    "playedAt": "2025-09-08T09:35:47.372Z"
+  },
+  {
+    "nickname": "tmp1",
+    "score": 3,
+    "playedAt": "2025-09-08T09:46:25.835Z"
+  },
+  {
+    "nickname": "liran",
+    "score": 3,
+    "playedAt": "2025-09-08T09:13:33.876Z"
+  },
+  {
+    "nickname": "ok",
+    "score": 3,
+    "playedAt": "2025-09-08T09:13:09.781Z"
+  },
+  {
     "nickname": "liran22",
     "score": 3,
     "playedAt": "2025-09-08T08:51:24.896Z"
   },
   {
+    "nickname": "liran",
+    "score": 2,
+    "playedAt": "2025-09-08T09:32:13.464Z"
+  },
+  {
     "nickname": "lili",
     "score": 2,
     "playedAt": "2025-09-08T08:58:54.101Z"
+  },
+  {
+    "nickname": "tmp1",
+    "score": 1,
+    "playedAt": "2025-09-08T09:47:00.042Z"
   },
   {
     "nickname": "reut",

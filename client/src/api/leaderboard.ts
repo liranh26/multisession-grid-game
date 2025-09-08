@@ -6,9 +6,7 @@ export type TopResponse<T> = { top: T[] };
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3001";
 
 export async function fetchTop<T>(limit = 10): Promise<TopResponse<T>> {
-    const res = await fetch(`${SERVER_URL}/leaderboard/top?limit=${limit}`, {
-        method: "GET",
-    });
+    const res = await fetch(`${SERVER_URL}/leaderboard/top?limit=${limit}`);
     if (!res.ok) throw new Error(`Failed fetching leaderboard: ${res.status}`);
     return res.json();
 }
@@ -20,16 +18,12 @@ export async function submitScore(body: SubmitPayload) {
         body: JSON.stringify(body),
     });
     if (!res.ok) {
-        const j = await safeJson(res);
-        throw new Error(j?.error || `Submit failed: ${res.status}`);
+        try {
+            const j = await res.json();
+            throw new Error(j?.error || `Submit failed: ${res.status}`);
+        } catch {
+            throw new Error(`Submit failed: ${res.status}`);
+        }
     }
     return res.json();
-}
-
-async function safeJson(res: Response) {
-    try {
-        return await res.json();
-    } catch {
-        return undefined;
-    }
 }
